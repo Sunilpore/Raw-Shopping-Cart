@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -46,28 +45,22 @@ public class SignupActivity extends AppCompatActivity {
                 Log.d(TAG,tuname);
                 if(tfname.length()!=0 && tuname.length()!=0 && tpass.length()!=0){
 
-                     if(tpass.equals(tcpass)){
+                    if(tpass.equals(tcpass)){
 
-                         /*boolean isCheck=check();
-                         if(!isCheck) {             //Mean, isCheck=false*/
+                        boolean inserted = db.addUserData(new UserModel(tfname,tuname,tpass));
+                        if (inserted) {
+                            Toast.makeText(SignupActivity.this, "SignUp successfully", Toast.LENGTH_LONG).show();
 
-                             boolean inserted = db.addUserData(new UserModel(tfname,tuname,tpass));
-                             if (inserted) {
-                                 Toast.makeText(SignupActivity.this, "SignUp successfully", Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(SignupActivity.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
+                        else
+                            Toast.makeText(SignupActivity.this, "Failed to SignUp", Toast.LENGTH_LONG).show();
 
-                                 Intent i = new Intent(SignupActivity.this, MainActivity.class);
-                                 startActivity(i);
-                                 finish();
-                             }
-                             else
-                                 Toast.makeText(SignupActivity.this, "Failed to SignUp", Toast.LENGTH_LONG).show();
-
-                        /* }
-                         else
-                             Toast.makeText(SignupActivity.this, "Usrname already exists", Toast.LENGTH_LONG).show();*/
-                     }
-                     else
-                         Toast.makeText(SignupActivity.this, "Enter the same password", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                        Toast.makeText(SignupActivity.this, "Enter the same password", Toast.LENGTH_LONG).show();
 
                 }
 
@@ -86,22 +79,6 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-    /*public boolean check(){
-
-        String username=uname.getText().toString()
-        Cursor cur=db.getAllUserData();
-        boolean check=false;
-
-        while(cur.moveToNext()){
-
-            String checkUsername=cur.getString(2);
-
-            if( uname.getText().toString().equals(checkUsername)){
-                check=true;
-            }
-        }
-        return check;
-    }*/
 
 
 }

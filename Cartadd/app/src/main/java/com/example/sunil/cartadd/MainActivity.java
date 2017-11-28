@@ -83,15 +83,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
                 }
-
-                /*if (isCheck) {
-                    Toast.makeText(MainActivity.this, "Login successfully", Toast.LENGTH_LONG).show();
-
-                    Intent i = new Intent(MainActivity.this, HomeActivity.class);
-                    startActivity(i);
-                    finish();
-                } else
-                    Toast.makeText(MainActivity.this, "Incorrect username or password...!", Toast.LENGTH_LONG).show();*/
                 break;
 
             case R.id.bt_signup2:
@@ -119,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 case R.id.bt_menuview:
                     String username = uname2.getText().toString();
-                    Cursor cur = db.getAllUserData(username);
+                    Cursor cur = db.getAllUserData();
 
                     if (cur.getCount() == 0) {
                         showMsg("ERROR", "DATA NOT FOUND");
@@ -157,21 +148,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public Cursor loginCheck() {
 
         String username = uname2.getText().toString();
-        Cursor cur = db.getAllUserData(username);
+        String password = pass2.getText().toString();
+        Cursor cur = db.getAllUserData(username,password);
 
         return cur;
 
-        //boolean check=false;
-         /*while(cur.moveToNext()){
-
-            String checkUsername=cur.getString(2);
-            String checkPass=cur.getString(3);
-
-            if( uname2.getText().toString().equals(checkUsername) && pass2.getText().toString().equals(checkPass)){
-              check=true;
-            }
-        }
-        return check;*/
     }
 
 }

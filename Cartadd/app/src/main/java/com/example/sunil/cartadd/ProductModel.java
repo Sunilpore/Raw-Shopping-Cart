@@ -13,8 +13,8 @@ public class ProductModel {
     public ProductModel() {
     }
 
-    public ProductModel(int pid) {
-        this.pid = pid;
+    public ProductModel(String prodname) {
+        this.prodname = prodname;
     }
 /*
     public ProductModel(String prodname) {
@@ -27,9 +27,8 @@ public class ProductModel {
     }*/
 
     public ProductModel( String prodname , int prodprice) {
-        this.prodprice = prodprice;
         this.prodname = prodname;
-        this.clickbutton=clickbutton;
+        this.prodprice = prodprice;
     }
 
     public int getPid() {

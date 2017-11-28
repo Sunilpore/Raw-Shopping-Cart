@@ -1,6 +1,7 @@
 package com.example.sunil.cartadd;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,12 @@ import java.util.ArrayList;
  */
 
 class MyAdapter extends BaseAdapter{
+
+    public static final String MyprefK = "Prefkey";
+    public static final String UserIDK = "UserIDkey";
+
+    SharedPreferences sp;
+    SharedPreferences.Editor ed;
 
     private Context mContext;
     private ArrayList<ProductModel> alist;
@@ -50,6 +57,10 @@ class MyAdapter extends BaseAdapter{
 
     @Override
     public View getView(final int i, View view, ViewGroup vg) {
+
+        sp = mContext.getSharedPreferences(MyprefK, Context.MODE_PRIVATE);
+        ed = sp.edit();
+
         final ViewHolder vh;
         if(view==null) {
             vh=new ViewHolder();
@@ -95,7 +106,12 @@ class MyAdapter extends BaseAdapter{
                 UserModel umd=new UserModel();
                 ProductModel pmd=new ProductModel();
 
-                boolean cartInserted=db.addtoCart(new CartModel(umd.id,pmd.pid,1));
+                int useridSP=sp.getInt(UserIDK,1);
+
+
+                Toast.makeText(mContext,"USERID:"+useridSP+"\npmd.id:"+(alist.indexOf(tmp)+1),Toast.LENGTH_LONG).show();
+
+                boolean cartInserted=db.addtoCart(new CartModel(useridSP,(alist.indexOf(tmp)+1),1));
                 if(cartInserted){
                     tmp.setClickbutton(true);
                     Toast.makeText(mContext, "Add Button pressed", Toast.LENGTH_LONG).show();

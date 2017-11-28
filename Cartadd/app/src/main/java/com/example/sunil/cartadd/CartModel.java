@@ -4,6 +4,7 @@ public class CartModel {
 
      public int cartid,userid,prodid,cartquantity;
      public String cartProdname;
+     ProductModel prodItem;
 
      public CartModel(int userid, int prodid, int cartquantity) {
           this.userid = userid;
@@ -12,15 +13,19 @@ public class CartModel {
           this.cartquantity=cartquantity;
      }
 
-     public CartModel(String cartProdname, int cartquantity) {
+     public CartModel(ProductModel prodItem, int cartquantity) {
+          this.prodItem = prodItem;
           this.cartquantity = cartquantity;
-          this.cartProdname = cartProdname;
      }
 
-    public CartModel() {
+    public CartModel(int userid) {
+        this.userid = userid;
     }
 
-    public int getCartid() {
+    public CartModel() {
+     }
+
+     public int getCartid() {
           return cartid;
      }
 
@@ -60,4 +65,11 @@ public class CartModel {
           this.cartProdname = cartProdname;
      }
 
+     public ProductModel getProdItem() {
+          return prodItem;
+     }
+
+     public void setProdItem(ProductModel prodItem) {
+          this.prodItem = prodItem;
+     }
 }

@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class CartView extends AppCompatActivity {
+
+    public static final String MyprefK = "Prefkey";
+    public static final String UserIDK = "UserIDkey";
+
+    SharedPreferences sp;
+    SharedPreferences.Editor ed;
 
     DatabaseHandler db;
     ListView cartlv;
@@ -33,13 +40,14 @@ public class CartView extends AppCompatActivity {
 
         mContext=this;
         db=new DatabaseHandler(mContext);
+        sp=getSharedPreferences(MyprefK, Context.MODE_PRIVATE);
+        ed=sp.edit();
 
-        //Toast.makeText(getApplicationContext(),"DATA:"+db.getCartData()+" JOIN:"+db.getAllCartData(),Toast.LENGTH_LONG).show();
+        int useridSP=sp.getInt(UserIDK,0);
 
         cartlist=db.getCartData();
         ctadapter=new CartAdapter(mContext,cartlist);
         cartlv.setAdapter(ctadapter);
-
     }
 
     @Override
@@ -74,7 +82,7 @@ public class CartView extends AppCompatActivity {
 
                 i.addFlags(Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY);
                 startActivity(i);*/
-               onBackPressed();
+                onBackPressed();
                 break;
         }
 

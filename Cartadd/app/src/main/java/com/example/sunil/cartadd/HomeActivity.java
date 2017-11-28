@@ -5,6 +5,7 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.PersistableBundle;
 import android.support.annotation.RequiresApi;
@@ -17,6 +18,7 @@ import android.support.v7.app.NotificationCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -160,8 +162,15 @@ public class HomeActivity extends AppCompatActivity implements UpdateListener{
             buttonCount++;
             Snackbar.make(cordlay,buttonCount+" Product added in Cart",Snackbar.LENGTH_LONG).show();
         }
-        else
-            Snackbar.make(cordlay,"Item is not added successfully",Snackbar.LENGTH_LONG).show();
+        else{
+
+            Snackbar sn=Snackbar.make(cordlay,"Item is already added into the Cart",Snackbar.LENGTH_LONG);
+            View snackbarView = sn.getView();
+            snackbarView.setBackgroundColor(Color.RED);
+            sn.show();
+        }
+
+
     }
 
     public void onItemaddViewListener(boolean status, int position){

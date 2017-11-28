@@ -2,6 +2,7 @@ package com.example.sunil.cartadd;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -79,7 +80,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 "(" +COL_CART_ID +" INTEGER PRIMARY KEY,"
                 +COL_CART_QUANTITY +" INTEGER DEFAULT '1',"
                 + COL_CART_USERID + " INTEGER,"
-                + COL_CART_PRODID + " INTEGER,"
+                + COL_CART_PRODID + " INTEGER UNIQUE,"
                 + " FOREIGN KEY " + "(" + COL_CART_USERID + ")" + " REFERENCES " + TABLE_NAME_USER + "(" + COL_ID + ")"
                 + " FOREIGN KEY " + "(" + COL_CART_PRODID + ")" + " REFERENCES " + TABLE_NAME_PROD + "(" + COL_PROD_ID + ")" +")";
 
@@ -102,6 +103,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Add data for UserModel For signin
     public boolean addUserData(UserModel umd){
+        boolean addCheck=false;
 
         try{
             SQLiteDatabase db=this.getWritableDatabase();
@@ -113,54 +115,79 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             long result=db.insertOrThrow(TABLE_NAME_USER,null,value);
             if(result == -1)
-                return false;
+                addCheck=false;
             else
-                return true;
+                addCheck=true;
 
         }catch(android.database.sqlite.SQLiteConstraintException e){
             Toast.makeText(mContext,"User name Already Exist",Toast.LENGTH_LONG).show();
         }
-
+        return addCheck;
     }
 
 
     public boolean addProductData(ProductModel pmd){
 
-        SQLiteDatabase db=this.getWritableDatabase();
+            SQLiteDatabase db=this.getWritableDatabase();
 
-        ContentValues value=new ContentValues();
-        value.put(COL_PROD_NAME,pmd.getProdname());
-        value.put(COL_PROD_PRICE,pmd.getProdprice());
+            ContentValues value=new ContentValues();
+            value.put(COL_PROD_NAME,pmd.getProdname());
+            value.put(COL_PROD_PRICE,pmd.getProdprice());
 
-        long result=db.insert(TABLE_NAME_PROD,null,value);
-        if(result==-1)
-            return false;
-        else
-            return true;
+            long result=db.insert(TABLE_NAME_PROD,null,value);
+            if(result==-1)
+                return false;
+            else
+                return true;
+
     }
 
     public boolean addtoCart(CartModel cmd){
 
-        SQLiteDatabase db=this.getWritableDatabase();
+        boolean addCheck=false;
 
-        ContentValues value=new ContentValues();
-        value.put(COL_CART_QUANTITY,cmd.getCartquantity());
-        value.put(COL_CART_USERID,cmd.getUserid());
-        value.put(COL_CART_PRODID,cmd.getProdid());
+        try{
 
-        long result=db.insert(TABLE_NAME_CART,null,value);
-        if(result==-1)
-            return false;
-        else
-            return true;
+            SQLiteDatabase db=this.getWritableDatabase();
+
+            ContentValues value=new ContentValues();
+            value.put(COL_CART_QUANTITY,cmd.getCartquantity());
+            value.put(COL_CART_USERID,cmd.getUserid());
+            value.put(COL_CART_PRODID,cmd.getProdid());
+
+            long result=db.insertOrThrow(TABLE_NAME_CART,null,value);
+            if(result==-1)
+                addCheck=false;
+            else
+                addCheck=true;
+
+        }catch(android.database.sqlite.SQLiteConstraintException e){
+            Toast.makeText(mContext,"Product already added into the Cart",Toast.LENGTH_LONG).show();
+        }
+
+        return addCheck;
     }
 
 
-    public Cursor getAllUserData(String username){
+    public Cursor getAllUserData(String username,String password){
 
         SQLiteDatabase db=this.getWritableDatabase();
 
-        Cursor cur=db.rawQuery("select "+COL_ID+" = "+username+ "from "+TABLE_NAME_USER,null);
+        String loginQuery="SELECT " + COL_ID + " FROM " + TABLE_NAME_USER + " WHERE " + COL_USERNAME + " = ? AND " + COL_PASS + " = ?";
+
+        Cursor cur=db.rawQuery(loginQuery,new String[]{username,password});
+
+
+        return cur;
+    }
+
+
+    //This method is call for view Login user SignUp Record on Login page
+    public Cursor getAllUserData(){
+
+        SQLiteDatabase db=this.getWritableDatabase();
+
+        Cursor cur=db.rawQuery("select * from "+TABLE_NAME_USER,null);
         return cur;
     }
 
@@ -172,16 +199,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+
     public Cursor getAllCartData(){
         SQLiteDatabase db=this.getWritableDatabase();
 
-        CartModel cmd=new CartModel();
         String cartJointQuery="SELECT * FROM " + TABLE_NAME_CART
                 + " JOIN " + TABLE_NAME_USER
                 + " ON " + TABLE_NAME_CART + "." + COL_CART_USERID + " = " + TABLE_NAME_USER + "." + COL_ID
                 + " JOIN " + TABLE_NAME_PROD
-                + " ON " + TABLE_NAME_CART + "." + COL_CART_PRODID + " = " + TABLE_NAME_PROD + "." + COL_PROD_ID
-                + " WHERE "+ COL_ID+ " = " ;
+                + " ON " + TABLE_NAME_CART + "." + COL_CART_PRODID + " = " + TABLE_NAME_PROD + "." + COL_PROD_ID;
 
         Cursor cur=db.rawQuery(cartJointQuery,null);
         return cur;
@@ -193,15 +219,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         ArrayList<ProductModel> mlist = new ArrayList<>();
 
-
         if (cur != null) {
-            while (cur.moveToNext()) {
+            /*while (cur.moveToNext()) {
 
                 String prodname = cur.getString(cur.getColumnIndex(COL_PROD_NAME));
                 int prodprice = cur.getInt(cur.getColumnIndex(COL_PROD_PRICE));
 
                 mlist.add(new ProductModel(prodname,prodprice));
-            }
+            }*/
+
+            cur.moveToFirst();
+            do{
+                String prodname = cur.getString(cur.getColumnIndex(COL_PROD_NAME));
+                int prodprice = cur.getInt(cur.getColumnIndex(COL_PROD_PRICE));
+
+                mlist.add(new ProductModel(prodname,prodprice));
+            }while(cur.moveToNext());
         }
         return mlist;
     }
@@ -210,21 +243,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Cursor cur=getAllCartData();
 
+        //CartModel cmd=new CartModel();
+        ProductModel pmd;
         ArrayList<CartModel> cartlist=new ArrayList<>();
 
         if(cur != null){
             while(cur.moveToNext()){
 
                 String cartProdname=cur.getString(cur.getColumnIndex(COL_PROD_NAME));
+                int cartProdprize=cur.getInt(cur.getColumnIndex(COL_PROD_PRICE));
                 int cartItemQty=cur.getInt(cur.getColumnIndex(COL_CART_QUANTITY));
 
+                /*cmd.setCartquantity(cur.getInt(cur.getColumnIndex(COL_CART_QUANTITY)));
+
+                pmd.setProdname(cur.getString(cur.getColumnIndex(COL_PROD_NAME)));
+                cmd.setProdItem(pmd);
+
+                cartlist.add(cmd);*/
+
                 Log.d(tag, cartProdname);
-                cartlist.add(new CartModel(cartProdname,cartItemQty));
+
+                pmd=new ProductModel(cartProdname,cartProdprize);
+                cartlist.add(new CartModel(pmd,cartItemQty));
             }
         }
         return cartlist;
     }
-
 
 }
 
