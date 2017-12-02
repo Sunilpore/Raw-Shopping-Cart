@@ -1,4 +1,4 @@
-package com.example.sunil.cartadd;
+package com.example.sunil.cartadd.Activity;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.example.sunil.cartadd.Database.DatabaseHandler;
+import com.example.sunil.cartadd.R;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -70,6 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             int userID = cur.getInt(cur.getColumnIndex("USER_ID"));
                             ed.putInt(UserIDK, userID);
                             ed.apply();
+                            Toast.makeText(MainActivity.this,"userID:"+userID,Toast.LENGTH_SHORT).show();
                         }
 
                         Toast.makeText(MainActivity.this, "Login successfully", Toast.LENGTH_LONG).show();

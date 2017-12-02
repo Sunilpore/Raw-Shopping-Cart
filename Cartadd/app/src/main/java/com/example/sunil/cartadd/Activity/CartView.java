@@ -1,9 +1,9 @@
-package com.example.sunil.cartadd;
+package com.example.sunil.cartadd.Activity;
 
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,15 +14,18 @@ import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.sunil.cartadd.Adapter.CartAdapter;
+import com.example.sunil.cartadd.Model.CartModel;
+import com.example.sunil.cartadd.Database.DatabaseHandler;
+import com.example.sunil.cartadd.R;
+
 import java.util.ArrayList;
 
 public class CartView extends AppCompatActivity {
 
-    public static final String MyprefK = "Prefkey";
-    public static final String UserIDK = "UserIDkey";
-
-    SharedPreferences sp;
-    SharedPreferences.Editor ed;
+    private final String PLUS="INCREMENT";
+    private final String MINUS="DECREMENT";
+    private final String DEL="DELETE";
 
     DatabaseHandler db;
     ListView cartlv;
@@ -40,15 +43,45 @@ public class CartView extends AppCompatActivity {
 
         mContext=this;
         db=new DatabaseHandler(mContext);
-        sp=getSharedPreferences(MyprefK, Context.MODE_PRIVATE);
-        ed=sp.edit();
-
-        int useridSP=sp.getInt(UserIDK,0);
 
         cartlist=db.getCartData();
         ctadapter=new CartAdapter(mContext,cartlist);
         cartlv.setAdapter(ctadapter);
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mContext.registerReceiver(A,new IntentFilter(PLUS));
+        mContext.registerReceiver(A,new IntentFilter(MINUS));
+        mContext.registerReceiver(A,new IntentFilter(DEL));
+    }
+
+    BroadcastReceiver A=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(intent.getAction().equals(PLUS) || intent.getAction().equals(MINUS) ||  intent.getAction().equals(DEL)){
+
+                Toast.makeText(mContext,"BroadcastReciever",Toast.LENGTH_SHORT).show();
+                ctadapter.notifyDataSetChanged();
+
+                //This part is necessary.If you skip this one,then your textview is not update untill you not restart the activity again
+                {
+                    cartlist=db.getCartData();
+                    ctadapter=new CartAdapter(mContext,cartlist);
+                    cartlv.setAdapter(ctadapter);
+                }
+
+                //If you are not using above code then use it for refresh the value for textview i.e Cart Product Quantity
+               /* Intent i = getIntent();
+                finish();
+                startActivity(i);*/
+            }
+
+        }
+    };
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -1,4 +1,4 @@
-package com.example.sunil.cartadd;
+package com.example.sunil.cartadd.Model;
 
 /**
  * Created by Sunil on 11/13/2017.

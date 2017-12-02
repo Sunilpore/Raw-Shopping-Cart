@@ -1,4 +1,6 @@
-package com.example.sunil.cartadd;
+package com.example.sunil.cartadd.Model;
+
+import com.example.sunil.cartadd.Model.ProductModel;
 
 public class CartModel {
 
@@ -17,6 +19,11 @@ public class CartModel {
           this.prodItem = prodItem;
           this.cartquantity = cartquantity;
      }
+
+    public CartModel(int cartid, int cartquantity) {
+        this.cartid = cartid;
+        this.cartquantity = cartquantity;
+    }
 
     public CartModel(int userid) {
         this.userid = userid;

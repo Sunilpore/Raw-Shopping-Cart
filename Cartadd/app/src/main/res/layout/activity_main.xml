@@ -1,74 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.sunil.cartadd.MainActivity"
-    tools:layout_editor_absoluteX="0dp"
-    tools:layout_editor_absoluteY="81dp">
+    android:orientation="vertical"
+    android:paddingTop="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingBottom="16dp"
+    tools:context="com.example.sunil.cartadd.Activity.MainActivity">
 
     <EditText
         android:id="@+id/tv_uname2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:hint="UserName"
         android:inputType="textPersonName"
         android:text=""
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="48dp"
-        tools:layout_constraintLeft_creator="1"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginTop="150dp"/>
 
     <EditText
         android:id="@+id/tv_pass2"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
         android:hint="Password"
         android:inputType="textPassword"
-        app:layout_constraintStart_toStartOf="@+id/tv_uname2"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/bt_login"
-        android:layout_marginTop="85dp"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="87dp"
-        app:layout_constraintLeft_toLeftOf="@+id/tv_uname2"
-        app:layout_constraintTop_toTopOf="@+id/tv_uname2" />
-
-    <Button
-        android:id="@+id/bt_signup2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="SignUp"
-        app:layout_constraintStart_toStartOf="@+id/bt_view"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="@+id/bt_login"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="97dp"
-        app:layout_constraintLeft_toLeftOf="@+id/bt_login" />
+        android:layout_marginTop="10dp"/>
 
     <Button
         android:id="@+id/bt_login"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Login"
-        tools:layout_constraintBottom_creator="1"
-        app:layout_constraintBottom_toTopOf="@+id/bt_signup2"
-        android:layout_marginStart="48dp"
-        tools:layout_constraintLeft_creator="1"
-        android:layout_marginBottom="55dp"
-        app:layout_constraintLeft_toLeftOf="@+id/tv_pass2"
-        android:layout_marginLeft="48dp" />
+        android:layout_marginTop="10dp"/>
+
+    <Button
+        android:id="@+id/bt_signup2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SignUp"
+        android:layout_marginTop="10dp"/>
 
 
-</android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>

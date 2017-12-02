@@ -1,4 +1,4 @@
-package com.example.sunil.cartadd;
+package com.example.sunil.cartadd.Database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -9,6 +9,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.sunil.cartadd.Model.CartModel;
+import com.example.sunil.cartadd.Model.ProductModel;
+import com.example.sunil.cartadd.Model.UserModel;
+
 import java.util.ArrayList;
 
 /**
@@ -16,6 +20,13 @@ import java.util.ArrayList;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
+
+    public static final String MyprefK = "Prefkey";
+    public static final String UserIDK = "UserIDkey";
+    /*public static final String ProductIDK = "ProductIDkey";*/
+
+    SharedPreferences sp;
+    SharedPreferences.Editor ed;
 
     private static String tag = "myTag";
     Context mContext;
@@ -142,6 +153,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+
     public boolean addtoCart(CartModel cmd){
 
         boolean addCheck=false;
@@ -168,6 +180,35 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return addCheck;
     }
 
+    public boolean  qtyUpdate(int userid, int cartid, int qty){
+
+        SQLiteDatabase db=this.getWritableDatabase();
+
+        new CartModel(userid,cartid,qty);
+       /* Toast.makeText(mContext,"At Database value of cartquantity:"+qty,Toast.LENGTH_LONG).show();*/
+
+        ContentValues value=new ContentValues();
+        value.put(COL_CART_QUANTITY,qty);
+
+        long result=db.update(TABLE_NAME_CART,value,"CART_ID=? AND CART_USERID=?",new String[]{String.valueOf(cartid), String.valueOf(userid)});
+        if(result==-1)
+            return false;
+        else
+            return true;
+
+    };
+
+    public boolean cartItemdelete(int userid,int cartid){
+
+        SQLiteDatabase db=this.getWritableDatabase();
+
+       int result=db.delete(TABLE_NAME_CART,"CART_ID=? AND CART_USERID=?",new String[]{String.valueOf(cartid), String.valueOf(userid)});
+        if(result>0)
+            return true;
+        else
+            return false;
+
+    };
 
     public Cursor getAllUserData(String username,String password){
 
@@ -182,7 +223,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
-    //This method is call for view Login user SignUp Record on Login page
+    //This method is call for view Login user's SignUp Record on Login page
     public Cursor getAllUserData(){
 
         SQLiteDatabase db=this.getWritableDatabase();
@@ -201,15 +242,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     public Cursor getAllCartData(){
+
+        sp=mContext.getSharedPreferences(MyprefK, Context.MODE_PRIVATE);
+        ed=sp.edit();
+
+        int useridSP=sp.getInt(UserIDK,0);
+
         SQLiteDatabase db=this.getWritableDatabase();
 
         String cartJointQuery="SELECT * FROM " + TABLE_NAME_CART
                 + " JOIN " + TABLE_NAME_USER
                 + " ON " + TABLE_NAME_CART + "." + COL_CART_USERID + " = " + TABLE_NAME_USER + "." + COL_ID
                 + " JOIN " + TABLE_NAME_PROD
-                + " ON " + TABLE_NAME_CART + "." + COL_CART_PRODID + " = " + TABLE_NAME_PROD + "." + COL_PROD_ID;
+                + " ON " + TABLE_NAME_CART + "." + COL_CART_PRODID + " = " + TABLE_NAME_PROD + "." + COL_PROD_ID
+                + " WHERE "+ COL_ID + " =?";
 
-        Cursor cur=db.rawQuery(cartJointQuery,null);
+        //Important step.At here we can use UserID in where clause for individual record
+        Cursor cur=db.rawQuery(cartJointQuery,new String[]{String.valueOf(useridSP)});
         return cur;
     }
 
@@ -239,7 +288,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return mlist;
     }
 
-    public ArrayList<CartModel> getCartData(){
+    public ArrayList<CartModel> getCartData(/*int useridSP*/){
 
         Cursor cur=getAllCartData();
 
@@ -271,33 +320,3 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 }
-
-
- /*public ArrayList<ProductModel> getProductData(){
-        ArrayList<ProductModel> plist =new ArrayList<>();
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query="select * from "+TABLE_NAME_PROD;
-        Cursor cur=db.rawQuery(query,null);
-        //Cursor cur = getAllProductData();
-
-
-        String prodname;
-        int prodprice;
-        if(cur !=null){
-            if(cur.moveToFirst()) {
-                do {
-
-               *//* prodname = productModel.setProdname(cur.getString(cur.getColumnIndex(COL_PROD_NAME)));*//*
-                    prodname = cur.getString(cur.getColumnIndex(COL_PROD_NAME));
-
-                    prodprice = cur.getInt(cur.getColumnIndex(COL_PROD_PRICE));
-
-                    Log.d("allData", "product Name: " + prodname);
-                    Log.d("allData", "product prize: " + String.valueOf(prodprice));
-
-                    plist.add(new ProductModel(prodname, prodprice));
-                } while (cur.moveToNext());
-            }
-        }
-        return plist;
-    }*/

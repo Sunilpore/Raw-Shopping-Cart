@@ -1,4 +1,4 @@
-package com.example.sunil.cartadd;
+package com.example.sunil.cartadd.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -10,16 +10,24 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sunil.cartadd.Database.DatabaseHandler;
+import com.example.sunil.cartadd.Interface.UpdateListener;
+import com.example.sunil.cartadd.Model.CartModel;
+import com.example.sunil.cartadd.Model.ProductModel;
+import com.example.sunil.cartadd.Model.UserModel;
+import com.example.sunil.cartadd.R;
+
 import java.util.ArrayList;
 
 /**
  * Created by Sunil on 11/13/2017.
  */
 
-class MyAdapter extends BaseAdapter{
+public class MyAdapter extends BaseAdapter{
 
     public static final String MyprefK = "Prefkey";
     public static final String UserIDK = "UserIDkey";
+    /*public static final String ProductIDK = "ProductIDkey";*/
 
     SharedPreferences sp;
     SharedPreferences.Editor ed;
@@ -109,12 +117,15 @@ class MyAdapter extends BaseAdapter{
                 int useridSP=sp.getInt(UserIDK,1);
 
 
-                Toast.makeText(mContext,"USERID:"+useridSP+"\npmd.id:"+(alist.indexOf(tmp)+1),Toast.LENGTH_LONG).show();
+                /*Toast.makeText(mContext,"USERID:"+useridSP+"\npmd.id:"+(alist.indexOf(tmp)+1),Toast.LENGTH_LONG).show();*/
+
+                /*ed.putInt(ProductIDK,alist.indexOf(tmp)+1);
+                ed.apply();*/
 
                 boolean cartInserted=db.addtoCart(new CartModel(useridSP,(alist.indexOf(tmp)+1),1));
                 if(cartInserted){
                     tmp.setClickbutton(true);
-                    Toast.makeText(mContext, "Add Button pressed", Toast.LENGTH_LONG).show();
+                    /*Toast.makeText(mContext, "Add Button pressed", Toast.LENGTH_LONG).show();*/
                 }
 
                 notifyDataSetChanged();
