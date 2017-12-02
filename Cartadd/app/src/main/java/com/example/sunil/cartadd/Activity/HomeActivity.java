@@ -28,6 +28,7 @@ public class HomeActivity extends AppCompatActivity implements UpdateListener {
 
     public static final String MyprefK="Prefkey";
     public static final String CheckK="Checkkey";
+    public static final String UserIDK = "UserIDkey";
 
     String add;
     SharedPreferences sp;
@@ -119,7 +120,7 @@ public class HomeActivity extends AppCompatActivity implements UpdateListener {
         MenuInflater menuInflater=getMenuInflater();
         menuInflater.inflate(R.menu.menu_activity,menu);
         countview=menu.findItem(R.id.count_id);
-
+        getCount();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -176,10 +177,22 @@ public class HomeActivity extends AppCompatActivity implements UpdateListener {
         if(status){
             countstatus++;
 
-            add=String.valueOf(countstatus) + "Items Added";
+            add=String.valueOf(countstatus) + " Items Added";
             countview.setTitle(add);
         }
 
     }
 
+    private void getCount(){
+
+        int count=db.cartCount(sp.getInt(UserIDK,0));
+        countview.setTitle(""+count+" Items Added");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+
+        getCount();
+    }
 }

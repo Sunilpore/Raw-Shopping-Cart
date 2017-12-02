@@ -15,9 +15,10 @@ public class CartModel {
           this.cartquantity=cartquantity;
      }
 
-     public CartModel(ProductModel prodItem, int cartquantity) {
+     public CartModel(ProductModel prodItem, int cartquantity,int cartid) {
           this.prodItem = prodItem;
           this.cartquantity = cartquantity;
+          this.cartid=cartid;
      }
 
     public CartModel(int cartid, int cartquantity) {

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -61,22 +62,27 @@ public class CartView extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if(intent.getAction().equals(PLUS) || intent.getAction().equals(MINUS) ||  intent.getAction().equals(DEL)){
+            if(intent.getAction().equals(PLUS) || intent.getAction().equals(MINUS) ){
 
                 Toast.makeText(mContext,"BroadcastReciever",Toast.LENGTH_SHORT).show();
-                ctadapter.notifyDataSetChanged();
+                //ctadapter.notifyDataSetChanged();
 
                 //This part is necessary.If you skip this one,then your textview is not update untill you not restart the activity again
-                {
-                    cartlist=db.getCartData();
+
+                    /*cartlist=db.getCartData();
                     ctadapter=new CartAdapter(mContext,cartlist);
-                    cartlv.setAdapter(ctadapter);
-                }
+                    cartlv.setAdapter(ctadapter);*/
+
 
                 //If you are not using above code then use it for refresh the value for textview i.e Cart Product Quantity
                /* Intent i = getIntent();
                 finish();
                 startActivity(i);*/
+            }else if (intent.getAction().equals(DEL)){
+                int position=intent.getIntExtra("position",0);
+                Log.d("myTag",""+position);
+                cartlist.remove(position);
+                ctadapter.notifyDataSetChanged();
             }
 
         }
@@ -104,6 +110,7 @@ public class CartView extends AppCompatActivity {
 
             case R.id.logout_id2:
                 Intent i1=new Intent(CartView.this,MainActivity.class);
+                i1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i1);
                 finish();
                 break;
