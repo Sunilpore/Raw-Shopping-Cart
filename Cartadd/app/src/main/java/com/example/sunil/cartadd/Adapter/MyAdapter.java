@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.sunil.cartadd.Database.DatabaseHandler;
 import com.example.sunil.cartadd.Interface.UpdateListener;
@@ -131,7 +130,6 @@ public class MyAdapter extends BaseAdapter{
                 notifyDataSetChanged();
 
                 onUpdateListener.onUpdateListenernow(cartInserted,i);
-                onUpdateListener.onItemaddViewListener(cartInserted,i);
 
             }
         });

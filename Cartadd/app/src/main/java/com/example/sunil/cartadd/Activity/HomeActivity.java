@@ -41,7 +41,7 @@ public class HomeActivity extends AppCompatActivity implements UpdateListener {
     MyAdapter adapter;
     ArrayList<ProductModel> plist;
     Context mContext;
-    static int buttonCount,countstatus;
+    int count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,8 +158,12 @@ public class HomeActivity extends AppCompatActivity implements UpdateListener {
     public void onUpdateListenernow(boolean status, int position) {
 
         if(status){
-            buttonCount++;
-            Snackbar.make(cordlay,buttonCount+" Product added in Cart",Snackbar.LENGTH_LONG).show();
+
+            count=count+1;
+            add=String.valueOf(count) + " Items Added";
+            countview.setTitle(add);
+
+            Snackbar.make(cordlay,count+" Product added in Cart",Snackbar.LENGTH_LONG).show();
         }
         else{
 
@@ -168,25 +172,13 @@ public class HomeActivity extends AppCompatActivity implements UpdateListener {
             snackbarView.setBackgroundColor(Color.RED);
             sn.show();
         }
-
-
-    }
-
-    public void onItemaddViewListener(boolean status, int position){
-
-        if(status){
-            countstatus++;
-
-            add=String.valueOf(countstatus) + " Items Added";
-            countview.setTitle(add);
-        }
-
     }
 
     private void getCount(){
 
-        int count=db.cartCount(sp.getInt(UserIDK,0));
+        count=db.cartCount(sp.getInt(UserIDK,0));
         countview.setTitle(""+count+" Items Added");
+
     }
 
     @Override
@@ -195,4 +187,5 @@ public class HomeActivity extends AppCompatActivity implements UpdateListener {
 
         getCount();
     }
+
 }
