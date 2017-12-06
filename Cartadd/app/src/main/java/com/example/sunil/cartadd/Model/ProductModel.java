@@ -7,7 +7,7 @@ package com.example.sunil.cartadd.Model;
 public class ProductModel {
 
     public int pid,prodprice;
-    public String prodname;
+    public String prodname,prodcat;
     public boolean clickbutton;
 
     public ProductModel() {
@@ -21,14 +21,22 @@ public class ProductModel {
         this.prodname = prodname;
     }*/
 
-    /*public ProductModel(String prodname, int prodprice) {
+    public ProductModel( String prodname, int prodprice) {
         this.prodname = prodname;
         this.prodprice = prodprice;
-    }*/
+    }
 
-    public ProductModel( String prodname , int prodprice) {
+    public ProductModel(int pid, String prodname , int prodprice) {
+        this.pid=pid;
         this.prodname = prodname;
         this.prodprice = prodprice;
+    }
+
+    public ProductModel(String prodname, int prodprice, String prodcat) {
+        this.prodname = prodname;
+        this.prodprice = prodprice;
+        this.prodcat=prodcat;
+
     }
 
     public int getPid() {
@@ -45,6 +53,14 @@ public class ProductModel {
 
     public void setProdname(String prodname) {
         this.prodname = prodname;
+    }
+
+    public String getProdcat() {
+        return prodcat;
+    }
+
+    public void setProdcat(String prodcat) {
+        this.prodcat = prodcat;
     }
 
     public int getProdprice() {

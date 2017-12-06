@@ -13,16 +13,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sunil.cartadd.Adapter.CartAdapter;
+import com.example.sunil.cartadd.Interface.CartTotalPriceUpdateListener;
 import com.example.sunil.cartadd.Model.CartModel;
 import com.example.sunil.cartadd.Database.DatabaseHandler;
 import com.example.sunil.cartadd.R;
 
 import java.util.ArrayList;
 
-public class CartView extends AppCompatActivity {
+public class CartView extends AppCompatActivity implements CartTotalPriceUpdateListener{
 
     private final String PLUS="INCREMENT";
     private final String MINUS="DECREMENT";
@@ -30,6 +32,8 @@ public class CartView extends AppCompatActivity {
 
     DatabaseHandler db;
     ListView cartlv;
+    TextView totalprice;
+    int displayTotalPrice;
     Context mContext;
     CartAdapter ctadapter;
     ArrayList<CartModel> cartlist;
@@ -41,6 +45,7 @@ public class CartView extends AppCompatActivity {
         setContentView(R.layout.activity_cartview);
 
         cartlv= (ListView) findViewById(R.id.cartlist_view);
+        totalprice= (TextView) findViewById(R.id.Total_price);
 
         mContext=this;
         db=new DatabaseHandler(mContext);
@@ -48,6 +53,11 @@ public class CartView extends AppCompatActivity {
         cartlist=db.getCartData();
         ctadapter=new CartAdapter(mContext,cartlist);
         cartlv.setAdapter(ctadapter);
+        ctadapter.setOnCartPriceListener((CartTotalPriceUpdateListener) this);
+
+        displayTotalPrice=db.getCartTotalPrice();
+        totalprice.setText("Total Cost:Rs."+displayTotalPrice);
+
     }
 
     @Override
@@ -64,23 +74,19 @@ public class CartView extends AppCompatActivity {
 
             if(intent.getAction().equals(PLUS) || intent.getAction().equals(MINUS) ){
 
+                //No need here Intent reciever for this if() part.
                 Toast.makeText(mContext,"BroadcastReciever",Toast.LENGTH_SHORT).show();
-                //ctadapter.notifyDataSetChanged();
-
-                //This part is necessary.If you skip this one,then your textview is not update untill you not restart the activity again
-
-                    /*cartlist=db.getCartData();
-                    ctadapter=new CartAdapter(mContext,cartlist);
-                    cartlv.setAdapter(ctadapter);*/
-
 
                 //If you are not using above code then use it for refresh the value for textview i.e Cart Product Quantity
                /* Intent i = getIntent();
                 finish();
                 startActivity(i);*/
             }else if (intent.getAction().equals(DEL)){
+                //Here for removing cartitem from cartlist it is necessary to recieve it vai Broadcast and get the postion of item
+                //Else notify it at CartAdapter class itself inside vch.cartDel.setOnClickListener(); method
+
                 int position=intent.getIntExtra("position",0);
-                Log.d("myTag",""+position);
+//                Log.d("myTag",""+position);
                 cartlist.remove(position);
                 ctadapter.notifyDataSetChanged();
             }
@@ -127,5 +133,14 @@ public class CartView extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCartTotalPriceUpdate(boolean status) {
+        if(status){
+            displayTotalPrice=db.getCartTotalPrice();
+            totalprice.setText("Total Cost:Rs"+displayTotalPrice);
+        }
+
     }
 }

@@ -2,6 +2,7 @@ package com.example.sunil.cartadd.Adapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -114,14 +115,17 @@ public class MyAdapter extends BaseAdapter{
                 ProductModel pmd=new ProductModel();
 
                 int useridSP=sp.getInt(UserIDK,1);
-
+                Log.d("myTag","Productid:"+current.getPid());
 
                 /*Toast.makeText(mContext,"USERID:"+useridSP+"\npmd.id:"+(alist.indexOf(tmp)+1),Toast.LENGTH_LONG).show();*/
 
                 /*ed.putInt(ProductIDK,alist.indexOf(tmp)+1);
                 ed.apply();*/
 
-                boolean cartInserted=db.addtoCart(new CartModel(useridSP,(alist.indexOf(tmp)+1),1));
+                int productid=current.getPid();
+
+//                boolean cartInserted=db.addtoCart(new CartModel(useridSP,(alist.indexOf(tmp)+1),1));
+                boolean cartInserted=db.addtoCart(new CartModel(useridSP,productid,1));
                 if(cartInserted){
                     tmp.setClickbutton(true);
                     /*Toast.makeText(mContext, "Add Button pressed", Toast.LENGTH_LONG).show();*/

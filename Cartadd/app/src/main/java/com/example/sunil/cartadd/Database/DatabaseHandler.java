@@ -54,6 +54,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public static final String COL_PROD_ID = "PRODUCT_ID";
     public static final String COL_PROD_NAME = "PRODUCT_NAME";
     public static final String COL_PROD_PRICE = "PRODUCT_PRICE";
+    public static final String COL_PROD_CATEGORY = "PRODUCT_CATEGORY";
 
 
     //For Table 3
@@ -84,7 +85,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_TABLE_PROD = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_PROD +
                 "(" + COL_PROD_ID + " INTEGER PRIMARY KEY,"
                 + COL_PROD_NAME + " TEXT,"
-                + COL_PROD_PRICE + " INT" + ")";
+                + COL_PROD_PRICE + " INT,"
+                + COL_PROD_PRICE + " TEXT" + ")";
 
         //Define query For Table 3
         String CREATE_TABLE_CART = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_CART +
@@ -143,6 +145,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues value = new ContentValues();
         value.put(COL_PROD_NAME, pmd.getProdname());
         value.put(COL_PROD_PRICE, pmd.getProdprice());
+        value.put(COL_PROD_CATEGORY, pmd.getProdprice());
 
         long result = db.insert(TABLE_NAME_PROD, null, value);
         if (result == -1)
@@ -196,7 +199,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues value = new ContentValues();
         value.put(COL_CART_QUANTITY, cmd.getCartquantity());
         //Log.d(tag, "" + cmd.getCartid());
-        long result = db.update(TABLE_NAME_CART, value, COL_CART_ID + "=?", new String[]{String.valueOf(cmd.getCartid())});
+        long result = db.update(TABLE_NAME_CART, value, COL_CART_ID + "=?", new String[]{String.valueOf(cmd.cartid)});
         if (result == -1)
             return false;
         else
@@ -289,10 +292,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
             cur.moveToFirst();
             do {
+                int productid=cur.getInt(cur.getColumnIndex(COL_PROD_ID));
                 String prodname = cur.getString(cur.getColumnIndex(COL_PROD_NAME));
                 int prodprice = cur.getInt(cur.getColumnIndex(COL_PROD_PRICE));
 
-                mlist.add(new ProductModel(prodname, prodprice));
+                mlist.add(new ProductModel(productid,prodname,prodprice));
             } while (cur.moveToNext());
         }
         return mlist;
@@ -327,6 +331,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             }
         }
         return cartlist;
+    }
+
+
+    public int getCartTotalPrice(){
+
+        Cursor cur = getAllCartData();
+
+        int getTotalPrice=0;
+        if(cur!=null){
+            while (cur.moveToNext()) {
+
+                int cartProdprize = cur.getInt(cur.getColumnIndex(COL_PROD_PRICE));
+                int cartItemQty = cur.getInt(cur.getColumnIndex(COL_CART_QUANTITY));
+
+                getTotalPrice= cartProdprize*cartItemQty + getTotalPrice;
+            }
+        }
+
+        return getTotalPrice;
     }
 
     public int cartCount(int userId){

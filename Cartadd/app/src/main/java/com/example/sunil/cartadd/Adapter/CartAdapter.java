@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sunil.cartadd.Database.DatabaseHandler;
+import com.example.sunil.cartadd.Interface.CartTotalPriceUpdateListener;
 import com.example.sunil.cartadd.Model.CartModel;
 import com.example.sunil.cartadd.R;
 
@@ -40,6 +41,7 @@ public class CartAdapter extends BaseAdapter {
     private Context mContext;
     private ArrayList<CartModel> cartlist;
     LayoutInflater inflater;
+    CartTotalPriceUpdateListener onPriceListener;
     DatabaseHandler db;
 
     public CartAdapter(Context mContext, ArrayList<CartModel> cartlist) {
@@ -113,6 +115,8 @@ public class CartAdapter extends BaseAdapter {
                     //Log.d("myTag", "Cart Adapter cartId: " + currentCart.getCartid());
                     currentCart.setCartquantity(qty);
                     boolean isQtyUpdate = db.qtyUpdate(currentCart);
+                    if(isQtyUpdate)
+                        onPriceListener.onCartTotalPriceUpdate(isQtyUpdate);
 
                 /*if(isQtyUpdate)
                 Toast.makeText(mContext,"Qty. increased\t After Update:"+currentCart.cartquantity,Toast.LENGTH_LONG).show();
@@ -121,6 +125,8 @@ public class CartAdapter extends BaseAdapter {
 
                     mContext.sendBroadcast(a);
                     notifyDataSetChanged();
+
+
                 }
             });
 
@@ -137,8 +143,11 @@ public class CartAdapter extends BaseAdapter {
                         qty = currentCart.cartquantity - 1;
                         currentCart.setCartquantity(qty);
                         boolean isQtyUpdate = db.qtyUpdate(currentCart);
-                        if (isQtyUpdate)
+                        if (isQtyUpdate){
                             Toast.makeText(mContext, "Qty. decreased Success", Toast.LENGTH_LONG).show();
+                            onPriceListener.onCartTotalPriceUpdate(isQtyUpdate);
+                        }
+
                         else
                             Toast.makeText(mContext, "Qty. decreased Not Success", Toast.LENGTH_LONG).show();
 
@@ -161,12 +170,13 @@ public class CartAdapter extends BaseAdapter {
                     int cartid = currentCart.getCartid();
 
                     boolean isDeleted = db.cartItemdelete(cartid);
-
+                    if(isDeleted)
+                        onPriceListener.onCartTotalPriceUpdate(isDeleted);
 
                     Toast.makeText(mContext, "Qty. deleted", Toast.LENGTH_LONG).show();
                     c.putExtra("position",i);
                     mContext.sendBroadcast(c);
-
+//                  cartlist.remove(i);      //Use it if you are not using BroadcastReciever method in Cartview.java.
                     notifyDataSetChanged();
                 }
             });
@@ -184,6 +194,10 @@ public class CartAdapter extends BaseAdapter {
 
         TextView cartProdname, cartPrize, cartItemQty;
         Button incrQty, decrQty, cartDel;
+    }
+
+    public void setOnCartPriceListener(CartTotalPriceUpdateListener onPriceListener){
+        this.onPriceListener=onPriceListener;
     }
 
 }
