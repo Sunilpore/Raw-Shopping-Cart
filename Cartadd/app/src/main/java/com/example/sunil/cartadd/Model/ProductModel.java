@@ -32,12 +32,12 @@ public class ProductModel {
         this.prodprice = prodprice;
     }
 
-    public ProductModel(String prodname, int prodprice, String prodcat) {
+    /*public ProductModel(String prodname, int prodprice, String prodcat) {
         this.prodname = prodname;
         this.prodprice = prodprice;
         this.prodcat=prodcat;
 
-    }
+    }*/
 
     public int getPid() {
         return pid;

@@ -84,21 +84,21 @@ public class HomeActivity extends AppCompatActivity implements UpdateListener {
         lv.setAdapter(adapter);*/
 
         if(sp.getBoolean(CheckK,true)){
-            db.addProductData(new ProductModel("Poduct 1",10,"ELECTRONICS"));
-            db.addProductData(new ProductModel("Poduct 2",20,"ELECTRONICS"));
-            db.addProductData(new ProductModel("Poduct 3",20,"ELECTRONICS"));
-            db.addProductData(new ProductModel("Poduct 4",20,"ELECTRONICS"));
-            db.addProductData(new ProductModel("Poduct 5",10,"ELECTRONICS"));
-            db.addProductData(new ProductModel("Poduct 6",10,"GROCERY"));
-            db.addProductData(new ProductModel("Poduct 7",20,"GROCERY"));
-            db.addProductData(new ProductModel("Poduct 8",20,"GROCERY"));
-            db.addProductData(new ProductModel("Poduct 9",30,"GROCERY"));
-            db.addProductData(new ProductModel("Poduct 10",30,"GROCERY"));
-            db.addProductData(new ProductModel("Poduct 11",40,"SPORTS"));
-            db.addProductData(new ProductModel("Poduct 12",50,"SPORTS"));
-            db.addProductData(new ProductModel("Poduct 13",60,"SPORTS"));
-            db.addProductData(new ProductModel("Poduct 14",60,"SPORTS"));
-            db.addProductData(new ProductModel("Poduct 15",60,"SPORTS"));
+            db.addProductData(new ProductModel("Poduct 1",10));
+            db.addProductData(new ProductModel("Poduct 2",20));
+            db.addProductData(new ProductModel("Poduct 3",20));
+            db.addProductData(new ProductModel("Poduct 4",20));
+            db.addProductData(new ProductModel("Poduct 5",10));
+            db.addProductData(new ProductModel("Poduct 6",10));
+            db.addProductData(new ProductModel("Poduct 7",20));
+            db.addProductData(new ProductModel("Poduct 8",20));
+            db.addProductData(new ProductModel("Poduct 9",30));
+            db.addProductData(new ProductModel("Poduct 10"));
+            db.addProductData(new ProductModel("Poduct 11"));
+            db.addProductData(new ProductModel("Poduct 12"));
+            db.addProductData(new ProductModel("Poduct 13"));
+            db.addProductData(new ProductModel("Poduct 14"));
+            db.addProductData(new ProductModel("Poduct 15"));
 
             //Here used apply() instead of commit();
             //Because, commit() blocks and writes its data to persistent storage immediately,where apply() will handle data in background.
